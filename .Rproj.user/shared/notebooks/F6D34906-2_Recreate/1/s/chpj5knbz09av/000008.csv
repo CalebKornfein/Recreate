@@ -1,0 +1,5 @@
+"0","# create the formatted P-value column"
+"0","table_model_summary <- table_model_summary %>%"
+"0","  mutate(Pvalue = case_when(Pvalue < 0.001 ~ ""<0.001"","
+"0","                             Pvalue < 0.01 ~ paste(format(round(Pvalue, digits=3), nsmall=3), sep=""""),"
+"0","                             Pvalue < 1 ~ paste(format(round(Pvalue, digits=2), nsmall=2), sep="""")))"

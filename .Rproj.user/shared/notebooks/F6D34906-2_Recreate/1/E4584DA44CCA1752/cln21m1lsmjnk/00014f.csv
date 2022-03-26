@@ -1,0 +1,12 @@
+"0",""
+"0","df2 <- df %>% mutate(case_when()"
+"0","  "
+"0",")"
+"1","[1m[33mError[39m in [38;5;232m`mutate()`[39m:[22m
+[38;5;232m[33m![38;5;232m Problem while computing `..1 = case_when()`.[39m
+[1mCaused by error in [38;5;232m`case_when()`[39m:[22m
+[38;5;232m[33m![38;5;232m No cases provided.[39m
+Backtrace:
+[90m 1. [39mdf %>% mutate(case_when())
+[90m 7. [39m[1mdplyr[22m::case_when()
+"

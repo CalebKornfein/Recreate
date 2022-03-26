@@ -1,0 +1,4 @@
+"0","fig_model <- lm(GMR.Post ~ GMR.Pre + Statins, data=df)"
+"0","fig_model_summary <- as.data.frame(coef(summary(fig_model)))"
+"0",""
+"0","kable(fig_model_summary)"
