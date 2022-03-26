@@ -1,3 +1,4 @@
+"0","# Run linear regression using GMR.Pre and Statins as predictors"
 "0","fig_model <- lm(GMR.Post ~ GMR.Pre + Statins, data=df)"
 "0","fig_model_summary <- as.data.frame(coef(summary(fig_model)))"
 "0",""

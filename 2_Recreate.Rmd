@@ -16,20 +16,28 @@ df <- read.csv("GFR2.csv")
 df$Statins <- factor(df$Statins, labels = c("No", "Yes"))
 ```
 
-
 ### Recreate Figure
 
 ```{r model}
+# Run linear regression using GMR.Pre and Statins as predictors
 fig_model <- lm(GMR.Post ~ GMR.Pre + Statins, data=df)
 fig_model_summary <- as.data.frame(coef(summary(fig_model)))
 
 kable(fig_model_summary)
 
+# Create two lines with different intercepts for whether the person had Statins usage based off model
 slope = fig_model_summary$Estimate[2]
-intercept = fig_model_summary$Estimate[1] + fig_model_summary$Estimate[3]
+yesStatins = fig_model_summary$Estimate[1] + fig_model_summary$Estimate[3]
+noStatins = fig_model_summary$Estimate[1]
 ```
 
+Now we continue to plotting the figure. We add two lines based off the linear regression model and see that they overlap just as in the figure in the paper.
+
 ```{r model, fig.height=5, fig.width=5, fig.align="center"}
+
+df2 <- df %>% mutate(GMR.Pre = case_when(GMR.Pre < 175 ~ GMR.Pre,
+                                         GMR.Pre >= 175 ~ 175))
+
 ggplot(df, aes(x=GMR.Pre, y=GMR.Post, color=Statins, shape=Statins), size = 10) +
       geom_point() +
       labs(y= "Maximum post-surgery", 
@@ -45,7 +53,8 @@ ggplot(df, aes(x=GMR.Pre, y=GMR.Post, color=Statins, shape=Statins), size = 10) 
                          limits = c(0,175)) +
       scale_x_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150, 175),
                          limits = c(0,175)) + 
-      geom_abline(intercept = intercept, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
+      geom_abline(intercept = intercept1, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
+      geom_abline(intercept = intercept2, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
       theme(plot.title = element_text(hjust = 0.5, size = 10), 
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(),
@@ -91,6 +100,7 @@ table_model_summary <- as.data.frame(coef(summary(table_model)))
 
 kable(table_model_summary)
 ```
+
 First let's calculate the confidence interval and then scale the intervals and coefficient estimates using the "adjusted" proportions from the table.
 
 ```{r}
@@ -135,7 +145,7 @@ rownames(table_model_summary) <- c("Preoperative eGFR (increase of 20 ml min\\te
 
 super <- c("Preoperative eGFR (increase of 20 ml min\\textsuperscript{-1} 1.73 m\\textsuperscript{-2})", "Patient age (increase of 5 yr)", "Weight (increase of 10 kg)", "Female gender (vs male)", "Diabetes (vs none)", "History of CHF (vs none)", "History of pulmonary disease (vs none)", "History of chronic kidney disease (vs none)", "Use of acetylcysteine (vs none)", "Emergent case (vs scheduled)", "Intraoperative haematocrit (increase of 0.05)", "Total volume (increase of 0.1 litre kg\\textsupercript{-1} h\\textsuperscript{-2})", "Crystalloids (increase of 1 litre)", "Colloids (increase of 0.5 litre)", "Statin use (vs none)")
 
-super2 <- c("Preoperative eGFR (increase of 20 ml min^-1^ 1.73 m^-2^)", "Patient age (increase of 5 yr)", "Weight (increase of 10 kg)", "Female gender (vs male)", "Diabetes (vs none)", "History of CHF (vs none)", "History of pulmonary disease (vs none)", "History of chronic kidney disease (vs none)", "Use of acetylcysteine (vs none)", "Emergent case (vs scheduled)", "Intraoperative haematocrit (increase of 0.05)", "Total volume (increase of 0.1 litre kg^-1^ h^-2^)", "Crystalloids (increase of 1 litre)", "Colloids (increase of 0.5 litre)", "Statin use (vs none)")
+super2 <- c("Preoperative eGFR (increase of 20 ml min^(-1) 1.73 m^(-2))", "Patient age (increase of 5 yr)", "Weight (increase of 10 kg)", "Female gender (vs male)", "Diabetes (vs none)", "History of CHF (vs none)", "History of pulmonary disease (vs none)", "History of chronic kidney disease (vs none)", "Use of acetylcysteine (vs none)", "Emergent case (vs scheduled)", "Intraoperative haematocrit (increase of 0.05)", "Total volume (increase of 0.1 litre kg^(-1) h(-2))", "Crystalloids (increase of 1 litre)", "Colloids (increase of 0.5 litre)", "Statin use (vs none)")
 
 table_model_summary <- table_model_summary %>% mutate(rows = rownames(table_model_summary))
 
