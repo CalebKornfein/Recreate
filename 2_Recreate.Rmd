@@ -6,11 +6,12 @@ output:
   pdf_document: default
   html_document:
     df_print: paged
+always_allow_html: true
 ---
 
 ### Load Packages
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=TRUE}
 library(knitr)
 library(tidyverse)
 library(ggthemes)
@@ -24,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
 ### Recreate Figure
 
-```{r model}
+```{r echo=TRUE}
 # Run linear regression using GMR.Pre and Statins as predictors
 fig_model <- lm(GMR.Post ~ GMR.Pre + Statins, data=df)
 fig_model_summary <- as.data.frame(coef(summary(fig_model)))
@@ -39,7 +40,7 @@ noStatins = fig_model_summary$Estimate[1]
 
 Now we continue to plotting the figure. We add two lines based off the linear regression model and see that they overlap just as in the figure in the paper.
 
-```{r model, fig.height=5, fig.width=5, fig.align="center"}
+```{r model, fig.height=5, fig.width=5, fig.align="center", echo=TRUE}
 
 # handle the outlier point
 df2 <- df %>% mutate(GMR.Pre = case_when(GMR.Pre < 175 ~ GMR.Pre,
@@ -86,7 +87,7 @@ ggsave(file="figure1.png", width=5, height=5, dpi=600)
 ```
 ### Recreate Table
 
-```{r}
+```{r echo=TRUE}
 table_model <- lm(GMR.Post ~ 
                   GMR.Pre + 
                   Age + 
@@ -110,7 +111,7 @@ kable(table_model_summary)
 
 First let's calculate the confidence interval and then scale the intervals and coefficient estimates using the "adjusted" proportions from the table.
 
-```{r}
+```{r echo=TRUE}
 # generate 95% confidence intervals
 intervals <- confint(table_model)
 colnames(intervals) <- c("lower", "upper")
@@ -138,7 +139,7 @@ table_model_summary <- adjust("Colloid", 500, table_model_summary)
 
 Now that we have derived all the Adjusted estimates and their confidence intervals, lets create the variables to output in the final data frame.
 
-```{r}
+```{r echo=TRUE}
 # create the output CI variable
 table_model_summary <- table_model_summary %>%
   mutate(outCI = paste(round(Estimate, digits=0), " (", round(lower, digits=0), ", ", round(upper, digits=0), ")", sep=""))
@@ -161,7 +162,7 @@ table_model_summary <- table_model_summary[c("rows", "outCI", "Pr(>|t|)")]
 colnames(table_model_summary) <- c("Effect", "Adjusted* difference (95% CI) in mean postoperative eGFR","Pvalue")
 ```
 
-```{r}
+```{r echo=TRUE}
 # create the formatted P-value column
 table_model_summary <- table_model_summary %>%
   mutate(Pvalue = case_when(Pvalue < 0.001 ~ "<0.001",
@@ -171,7 +172,7 @@ table_model_summary <- table_model_summary %>%
 
 Now let's make the table look nice! Note, much help with creating nice tables was taken from the code in: https://towardsdatascience.com/create-latex-and-ms-word-tables-in-r-6ac919204247.
 
-```{r}
+```{r echo=TRUE}
 table_model_summary$Effect <- super2
 
 table_model_summary %>%
