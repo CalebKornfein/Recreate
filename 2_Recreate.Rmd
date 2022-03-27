@@ -2,25 +2,24 @@
 title: "2_Recreate"
 author: "Caleb Kornfein"
 date: "3/17/2022"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
-
-### Settings
-
-```{r}
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
-```
-
 
 ### Load Packages
 
 ```{r setup, include=FALSE}
+library(knitr)
 library(tidyverse)
 library(ggthemes)
 library(lemon)
 library(kableExtra)
 df <- read.csv("GFR2.csv")
 df$Statins <- factor(df$Statins, labels = c("No", "Yes"))
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
 ### Recreate Figure
@@ -61,8 +60,8 @@ ggplot(df2, aes(x=GMR.Pre, y=GMR.Post, color=Statins, shape=Statins), size = 10)
                          limits = c(0,175)) +
       scale_x_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150, 175),
                          limits = c(0,175)) + 
-      geom_abline(intercept = intercept1, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
-      geom_abline(intercept = intercept2, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
+      geom_abline(intercept = noStatins, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
+      geom_abline(intercept = yesStatins, slope = slope, color = "deeppink4", size = 0.4, alpha = 0.8) +
       theme(plot.title = element_text(hjust = 0.5, size = 10), 
             panel.grid.major = element_blank(), 
             panel.grid.minor = element_blank(),

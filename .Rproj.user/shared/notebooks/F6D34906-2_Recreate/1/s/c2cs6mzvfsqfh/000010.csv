@@ -1,5 +1,0 @@
-"0",""
-"0","# Create two lines with different intercepts for whether the person had Statins usage based off model"
-"0","slope = fig_model_summary$Estimate[2]"
-"0","yesStatins = fig_model_summary$Estimate[1] + fig_model_summary$Estimate[3]"
-"0","noStatins = fig_model_summary$Estimate[1]"
