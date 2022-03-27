@@ -1,6 +1,0 @@
-"0","library(tidyverse)"
-"0","library(ggthemes)"
-"0","library(lemon)"
-"0","library(kableExtra)"
-"0","df <- read.csv(""GFR2.csv"")"
-"0","df$Statins <- factor(df$Statins, labels = c(""No"", ""Yes""))"

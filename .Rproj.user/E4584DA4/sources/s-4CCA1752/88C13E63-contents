@@ -5,6 +5,13 @@ date: "3/17/2022"
 output: pdf_document
 ---
 
+### Settings
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+
 ### Load Packages
 
 ```{r setup, include=FALSE}
